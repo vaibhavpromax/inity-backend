@@ -5,51 +5,51 @@ const Expense = db.expense;
 const Income = db.income;
 
 const monthranges = {
-  January: [
+  jan: [
     moment().month(0).startOf("month").unix(),
     moment().month(0).endOf("month").unix(),
   ],
-  February: [
+  feb: [
     moment().month(1).startOf("month").unix(),
     moment().month(1).endOf("month").unix(),
   ],
-  March: [
+  mar: [
     moment().month(2).startOf("month").unix(),
     moment().month(2).endOf("month").unix(),
   ],
-  April: [
+  apr: [
     moment().month(3).startOf("month").unix(),
     moment().month(3).endOf("month").unix(),
   ],
-  May: [
+  may: [
     moment().month(4).startOf("month").unix(),
     moment().month(4).endOf("month").unix(),
   ],
-  June: [
+  june: [
     moment().month(5).startOf("month").unix(),
     moment().month(5).endOf("month").unix(),
   ],
-  July: [
+  july: [
     moment().month(6).startOf("month").unix(),
     moment().month(6).endOf("month").unix(),
   ],
-  August: [
+  aug: [
     moment().month(7).startOf("month").unix(),
     moment().month(7).endOf("month").unix(),
   ],
-  September: [
+  sept: [
     moment().month(8).startOf("month").unix(),
     moment().month(8).endOf("month").unix(),
   ],
-  October: [
+  oct: [
     moment().month(9).startOf("month").unix(),
     moment().month(9).endOf("month").unix(),
   ],
-  November: [
+  nov: [
     moment().month(10).startOf("month").unix(),
     moment().month(10).endOf("month").unix(),
   ],
-  December: [
+  dec: [
     moment().month(11).startOf("month").unix(),
     moment().month(11).endOf("month").unix(),
   ],
@@ -59,16 +59,21 @@ const monthranges = {
 exports.calculateExpense = (req, res) => {
   Expense.findAll()
     .then((data) => {
-      const monthlyExpense = [];
+      const monthlyExpense = {};
       for (let i = 0; i < data.length; i++) {
         const expense = data[i];
         const expenseDate = moment(expense.dataValues.date);
         for (const [key, value] of Object.entries(monthranges)) {
           if (expenseDate.isBetween(value[0], value[1])) {
-            monthlyExpense.push({
-              month: key,
-              expense: expense.amount,
-            });
+            if (monthlyExpense[key] === undefined) {
+              monthlyExpense[key] = expense.amount;
+            } else {
+              monthlyExpense[key] += expense.amount;
+            }
+          } else {
+            if (monthlyExpense[key] === undefined) {
+              monthlyExpense[key] = 0;
+            }
           }
         }
       }
@@ -85,16 +90,21 @@ exports.calculateExpense = (req, res) => {
 exports.calculateIncome = (req, res) => {
   Income.findAll()
     .then((data) => {
-      const monthlyIncome = [];
+      const monthlyIncome = {};
       for (let i = 0; i < data.length; i++) {
         const income = data[i];
         const incomeDate = moment(income.dataValues.date);
         for (const [key, value] of Object.entries(monthranges)) {
           if (incomeDate.isBetween(value[0], value[1])) {
-            monthlyIncome.push({
-              month: key,
-              income: income.amount,
-            });
+            if (monthlyIncome[key] === undefined) {
+              monthlyIncome[key] = income.amount;
+            } else {
+              monthlyIncome[key] += income.amount;
+            }
+          } else {
+            if (monthlyIncome[key] === undefined) {
+              monthlyIncome[key] = 0;
+            }
           }
         }
       }
