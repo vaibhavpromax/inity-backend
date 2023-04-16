@@ -36,6 +36,12 @@ db.expense.belongsTo(db.user, {
   // as: "user",
 });
 
+db.user.hasMany(db.income, { as: "incomes", foreignKey: "user_id" });
+db.income.belongsTo(db.user, {
+  foreignKey: "user_id",
+});
+
+
 // const db = require("../models");
 // const Month = db.month;
 

@@ -15,6 +15,7 @@ exports.create = (req, res) => {
   const category = {
     name: req.body.name,
     emoji: req.body.emoji,
+    user_id: req.user.user_id,
   };
 
   Category.create(category)
@@ -29,78 +30,91 @@ exports.create = (req, res) => {
     });
 };
 
-const bulkCreateCategories = async (req, res) => {
+exports.bulkCreateCategories = async (req) => {
   const categories = [
     {
       name: "Groceries",
       emoji: "🛒",
+      user_id: req.user_id,
     },
     {
       name: "Transportation",
       emoji: "🚗",
+      user_id: req.user_id,
     },
     {
       name: "Entertainment",
       emoji: "🎭",
+      user_id: req.user_id,
     },
     {
       name: "Bills",
       emoji: "📝",
+      user_id: req.user_id,
     },
     {
       name: "Clothing",
       emoji: "👕",
+      user_id: req.user_id,
     },
     {
       name: "Health",
       emoji: "💊",
+      user_id: req.user_id,
     },
     {
       name: "Other",
       emoji: "🤷‍♂️",
+      user_id: req.user_id,
     },
     {
       name: "EMI's",
       emoji: "💳",
+      user_id: req.user_id,
     },
     {
       name: "Food",
       emoji: "🥝",
+      user_id: req.user_id,
     },
     {
       name: "Taxes",
       emoji: "📝",
+      user_id: req.user_id,
     },
     {
       name: "Healthcare",
       emoji: "🏥",
+      user_id: req.user_id,
     },
     {
       name: "Education",
       emoji: "📚",
+      user_id: req.user_id,
     },
     {
       name: "Investment",
       emoji: "💹",
+      user_id: req.user_id,
     },
   ];
 
-  await Category.bulkCreate(categories)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Category.",
-      });
-    });
+  await Category.bulkCreate(categories);
+  // .then((data) => {
+  //   res.send(data);
+  // })
+  // .catch((err) => {
+  //   res.status(500).send({
+  //     message:
+  //       err.message || "Some error occurred while creating the Category.",
+  //   });
+  // });
 };
 
-bulkCreateCategories();
+// bulkCreateCategories();
 
 exports.findAll = (req, res) => {
-  Category.findAll()
+  Category.findAll({ where: { user_id: req.user.user_id } })
     .then((data) => {
       res.send(data);
     })

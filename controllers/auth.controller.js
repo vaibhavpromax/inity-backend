@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
+const category = require("./category.controller");
 const User = db.user;
 const signup = (req, res, next) => {
   // checks if email already exists
@@ -27,20 +28,17 @@ const signup = (req, res, next) => {
               gender: req.body.gender,
               avatar_link: req.body.avatarLink,
             })
-              .then(() => {
-                const token = jwt.sign({ email: req.body.email }, "secret", {
+              .then((us) => {
+                console.log(us?.dataValues);
+                const token = jwt.sign({ user: us?.dataValues }, "secret", {
                   expiresIn: "72h",
                 });
+
+                category.bulkCreateCategories(us?.dataValues);
                 res.status(200).json({
                   message: "user created",
                   token: token,
-                  user: {
-                    email: req.body.email,
-                    name: req.body.name,
-                    password: passwordHash,
-                    gender: req.body.gender,
-                    avatar_link: req.body.avatarLink,
-                  },
+                  user: us?.dataValues,
                 });
               })
               .catch((err) => {
@@ -85,7 +83,7 @@ const login = (req, res, next) => {
                 .json({ message: "error while checking user password" });
             } else if (compareRes) {
               // password match
-              const token = jwt.sign({ email: req.body.email }, "secret", {
+              const token = jwt.sign({ user: dbUser }, "secret", {
                 expiresIn: "72h",
               });
               res.status(200).json({
@@ -115,6 +113,7 @@ const isAuth = (req, res, next) => {
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, "secret");
+    req.user = decodedToken.user;
   } catch (err) {
     return res
       .status(500)

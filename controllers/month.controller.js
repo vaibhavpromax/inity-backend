@@ -15,7 +15,7 @@ const monthranges = {
   ],
   mar: [
     moment().month(2).startOf("month").unix(),
-  moment().month(2).endOf("month").unix(),
+    moment().month(2).endOf("month").unix(),
   ],
   apr: [
     moment().month(3).startOf("month").unix(),
@@ -57,9 +57,22 @@ const monthranges = {
 
 // calculate expense of every month
 exports.calculateExpense = (req, res) => {
-  Expense.findAll()
+  Expense.findAll({ where: { user_id: req.user.user_id } })
     .then((data) => {
-      const monthlyExpense = {};
+      const monthlyExpense = {
+        jan: 0,
+        feb: 0,
+        mar: 0,
+        apr: 0,
+        may: 0,
+        june: 0,
+        july: 0,
+        aug: 0,
+        sept: 0,
+        oct: 0,
+        nov: 0,
+        dec: 0,
+      };
       for (let i = 0; i < data.length; i++) {
         const expense = data[i];
         const expenseDate = moment(expense.dataValues.date);
@@ -88,9 +101,22 @@ exports.calculateExpense = (req, res) => {
 
 // calculate income of every month
 exports.calculateIncome = (req, res) => {
-  Income.findAll()
+  Income.findAll({ where: { user_id: req.user.user_id } })
     .then((data) => {
-      const monthlyIncome = {};
+      const monthlyIncome = {
+        jan: 0,
+        feb: 0,
+        mar: 0,
+        apr: 0,
+        may: 0,
+        june: 0,
+        july: 0,
+        aug: 0,
+        sept: 0,
+        oct: 0,
+        nov: 0,
+        dec: 0,
+      };
       for (let i = 0; i < data.length; i++) {
         const income = data[i];
         const incomeDate = moment(income.dataValues.date);

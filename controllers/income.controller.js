@@ -13,7 +13,7 @@ exports.create = (req, res) => {
   const income = {
     date: req.body.date,
     amount: req.body.amount,
-    user_id: req.body.userId,
+    user_id: req.user.user_id,
     description: req.body.description,
   };
 
@@ -30,7 +30,9 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  Income.findAll()
+  const id = req.user.user_id;
+
+  Income.findAll({ where: { user_id: id } })
     .then((data) => {
       res.send(data);
     })

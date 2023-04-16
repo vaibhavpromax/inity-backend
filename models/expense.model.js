@@ -7,10 +7,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     user_id: {
       type: Sequelize.UUID,
-      // references: {
-      //   model: "user",
-      //   key: "user_id",
-      // },
+     
     },
     category_id: {
       type: Sequelize.UUID,

@@ -12,10 +12,10 @@ module.exports = (app) => {
   // Create a new Tutorial
   //   router.post("/user/add", isAuth, user.create);
 
-  // Retrieve all Tutorials
   router.get("/category", isAuth, category.findAll);
 
-  // Create a new Tutorial
+  //
+
   router.post("/category/add", isAuth, category.create);
 
   // Retrive all expenses

@@ -14,7 +14,7 @@ exports.create = (req, res) => {
     date: req.body.date,
     amount: req.body.amount,
     category_id: req.body.categoryId,
-    user_id: req.body.userId,
+    user_id: req.user.user_id,
     description: req.body.description,
   };
 
@@ -31,7 +31,8 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  Expense.findAll({ include: Category })
+  const id = req.user.user_id;
+  Expense.findAll({ where: { user_id: id }, include: Category })
     .then((data) => {
       res.send(data);
     })
@@ -44,7 +45,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findExpenseOfUser = (req, res) => {
-  const id = req.body.user_id;
+  const id = req.user.user_id;
   Expense.findAll({ where: { user_id: id } })
     .then((data) => {
       res.send(data);
