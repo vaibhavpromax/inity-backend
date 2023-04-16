@@ -24,9 +24,24 @@ const signup = (req, res, next) => {
               email: req.body.email,
               name: req.body.name,
               password: passwordHash,
+              gender: req.body.gender,
+              avatar_link: req.body.avatarLink,
             })
               .then(() => {
-                res.status(200).json({ message: "user created" });
+                const token = jwt.sign({ email: req.body.email }, "secret", {
+                  expiresIn: "72h",
+                });
+                res.status(200).json({
+                  message: "user created",
+                  token: token,
+                  user: {
+                    email: req.body.email,
+                    name: req.body.name,
+                    password: passwordHash,
+                    gender: req.body.gender,
+                    avatar_link: req.body.avatarLink,
+                  },
+                });
               })
               .catch((err) => {
                 console.log(err);
@@ -73,7 +88,11 @@ const login = (req, res, next) => {
               const token = jwt.sign({ email: req.body.email }, "secret", {
                 expiresIn: "72h",
               });
-              res.status(200).json({ message: "user logged in", token: token });
+              res.status(200).json({
+                message: "user logged in",
+                token: token,
+                user: dbUser,
+              });
             } else {
               // password doesnt match
               res.status(401).json({ message: "invalid credentials" });

@@ -15,7 +15,7 @@ const monthranges = {
   ],
   mar: [
     moment().month(2).startOf("month").unix(),
-    moment().month(2).endOf("month").unix(),
+  moment().month(2).endOf("month").unix(),
   ],
   apr: [
     moment().month(3).startOf("month").unix(),
